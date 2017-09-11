@@ -122,14 +122,11 @@ unless platform_family?('mac_os_x')
     end
   end
 
-  skip_federated = case node['platform']
-                   when 'fedora', 'ubuntu', 'amazon'
-                     true
-                   when 'centos', 'redhat', 'scientific'
-                     node['platform_version'].to_f < 6.0
-                   else
-                     false
-                   end
+  skip_federated = if node['mysql']['version'].to_f >= 5.5
+   false
+  else
+   true
+  end
 
   template "#{node['mysql']['conf_dir']}/my.cnf" do
     source 'my.cnf.erb'
